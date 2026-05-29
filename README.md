@@ -4,6 +4,15 @@ Sistema de monitoramento e controle de inventário para a cápsula **Dragon C209
 
 ---
 
+## Equipe:
+
+| Nome | RM |
+|---|---|
+| Enrico Dellatorre | 566824 |
+| Gustavo Hiruo | 567625 |
+
+---
+
 ## Instalação e execução
 
 ### Pré-requisitos
