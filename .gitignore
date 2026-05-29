@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Logs
+*.log
+
+# Dependências (caso algum tooling rode na raiz)
+node_modules
