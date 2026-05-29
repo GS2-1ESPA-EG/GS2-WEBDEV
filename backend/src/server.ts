@@ -1,33 +1,22 @@
+// Ponto de entrada da aplicação: configura Express, middlewares globais e inicia o servidor
 import "dotenv/config";
-import express from 'express';
-import cors from 'cors';
-import Anthropic from "@anthropic-ai/sdk";
-
-const API_KEY = process.env.ANTHROPIC_API_KEY;
-if (!API_KEY) {
-  throw new Error("ANTHROPIC_API_KEY não está definida no .env");
-}
-
-const client = new Anthropic({ apiKey: API_KEY });
+import express from "express";
+import cors from "cors";
+import { env } from "./config/env.js";
+import router from "./routes/index.js";
+import { errorHandler } from "./middleware/errorHandler.js";
+import { logger } from "./middleware/logger.js";
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
+app.use(logger);
 
-app.post("/chat", async (req, res) => {
-  const { message } = req.body;
+app.use("/api", router);
 
-  const response = await client.messages.create({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 1024,
-    messages: [{ role: "user", content: message }],
-  });
+app.use(errorHandler);
 
-  const text = response.content[0].type === "text" ? response.content[0].text : "";
-  res.json({ reply: text });
-});
-
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
+app.listen(env.PORT, () => {
+  console.log(`OrbitStock backend rodando em http://localhost:${env.PORT}`);
 });
