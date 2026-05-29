@@ -2,6 +2,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { z } from "zod";
 import * as TelemetryService from "../services/telemetry.service.js";
+import type { TelemetryPayload } from "../types/telemetry.types.js";
 
 const notifyBodySchema = z.object({
   subscriptionId: z.string(),
@@ -19,9 +20,7 @@ export async function receiveNotification(
 ): Promise<void> {
   try {
     const body = notifyBodySchema.parse(req.body);
-    // TODO: chamar TelemetryService.processNotification(body)
-    void TelemetryService;
-    void body;
+    await TelemetryService.processNotification(body as unknown as TelemetryPayload);
     res.status(204).end();
   } catch (err) {
     next(err);
@@ -36,9 +35,8 @@ export async function listEvents(
   try {
     const { spacecraftId } = req.params as { spacecraftId: string };
     const { since } = eventsQuerySchema.parse(req.query);
-    // TODO: const events = await TelemetryService.getEvents(spacecraftId, since)
-    void TelemetryService;
-    res.json({ spacecraft_id: spacecraftId, since, events: [] });
+    const events = await TelemetryService.getEvents(spacecraftId, since);
+    res.json({ spacecraft_id: spacecraftId, since, events });
   } catch (err) {
     next(err);
   }

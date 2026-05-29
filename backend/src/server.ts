@@ -6,6 +6,7 @@ import { env } from "./config/env.js";
 import router from "./routes/index.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { logger } from "./middleware/logger.js";
+import { startPolling } from "./services/orion-poller.service.js";
 
 const app = express();
 
@@ -20,3 +21,5 @@ app.use(errorHandler);
 app.listen(env.PORT, () => {
   console.log(`OrbitStock backend rodando em http://localhost:${env.PORT}`);
 });
+
+startPolling();

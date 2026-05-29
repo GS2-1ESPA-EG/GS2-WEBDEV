@@ -1,8 +1,8 @@
 // Operações de upsert e leitura na tabela current_state do inventário
-import type { EntityState } from "../types/inventory.types.js";
+import type { CompartmentState } from "../types/inventory.types.js";
 import { getDb } from "./db.js";
 
-export function upsertState(entityId: string, state: EntityState): void {
+export function upsertState(entityId: string, state: CompartmentState): void {
   const db = getDb();
   db.prepare(`
     INSERT INTO current_state (entity_id, state, last_event_at, last_recompute_at)
@@ -19,21 +19,21 @@ export function upsertState(entityId: string, state: EntityState): void {
   });
 }
 
-export function getState(entityId: string): EntityState | null {
+export function getState(entityId: string): CompartmentState | null {
   const db = getDb();
   const row = db
     .prepare("SELECT state FROM current_state WHERE entity_id = ?")
     .get(entityId) as unknown as { state: string } | undefined;
 
   if (!row) return null;
-  return JSON.parse(row.state) as EntityState;
+  return JSON.parse(row.state) as CompartmentState;
 }
 
-export function listStatesBySpacecraft(spacecraftId: string): EntityState[] {
+export function listStatesBySpacecraft(spacecraftId: string): CompartmentState[] {
   const db = getDb();
   const rows = db
     .prepare("SELECT state FROM current_state WHERE entity_id LIKE ?")
     .all(`${spacecraftId}:%`) as unknown as Array<{ state: string }>;
 
-  return rows.map((r) => JSON.parse(r.state) as EntityState);
+  return rows.map((r) => JSON.parse(r.state) as CompartmentState);
 }

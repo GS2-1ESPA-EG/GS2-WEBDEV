@@ -10,10 +10,8 @@ export async function getInventory(
 ): Promise<void> {
   try {
     const { spacecraftId } = req.params as { spacecraftId: string };
-    // TODO: const state = await InventoryService.getInventoryState(spacecraftId)
-    // TODO: se state for null, retornar 404
-    void InventoryService;
-    res.json({ spacecraft_id: spacecraftId, items: [] });
+    const compartments = await InventoryService.getInventoryState(spacecraftId);
+    res.json({ spacecraft_id: spacecraftId, compartments });
   } catch (err) {
     next(err);
   }
@@ -26,9 +24,10 @@ export async function listAlerts(
 ): Promise<void> {
   try {
     const { spacecraftId } = req.params as { spacecraftId: string };
-    // TODO: const alerts = await AlertService.getActiveAlerts(spacecraftId)
-    void AlertService;
-    res.json({ spacecraft_id: spacecraftId, alerts: [] });
+    // Garante que o estado (e seus alertas) esteja calculado antes de ler
+    await InventoryService.getInventoryState(spacecraftId);
+    const alerts = await AlertService.getActiveAlerts(spacecraftId);
+    res.json({ spacecraft_id: spacecraftId, alerts });
   } catch (err) {
     next(err);
   }

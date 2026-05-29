@@ -7,3 +7,6 @@
 
 # Dependências (caso algum tooling rode na raiz)
 node_modules
+
+orbitstock.db-shm
+orbitstock.db-wal

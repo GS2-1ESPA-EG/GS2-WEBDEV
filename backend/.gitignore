@@ -4,3 +4,5 @@ dist
 .DS_Store
 data/*.db
 *.log
+orbitstock.db-shm
+orbitstock.db-wal
