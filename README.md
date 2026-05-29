@@ -21,7 +21,7 @@ Sistema de monitoramento e controle de inventário para a cápsula **Dragon C209
 
 ```bash
 git clone <url-do-repositorio>
-cd GS2-WEBFRONT
+cd GS2-WEBDEV
 ```
 
 ---
@@ -152,7 +152,7 @@ Abra o navegador em **http://localhost:5173**
 ## Estrutura do projeto
 
 ```
-GS2-WEBFRONT/
+GS2-WEBDEV/
 ├── backend/
 │   ├── src/
 │   │   ├── config/          # env.ts, anthropic.ts
