@@ -4,7 +4,7 @@ Sistema de monitoramento e controle de inventário para a cápsula **Dragon C209
 
 ---
 
-## Equipe:
+## Equipe
 
 | Nome | RM |
 |---|---|
