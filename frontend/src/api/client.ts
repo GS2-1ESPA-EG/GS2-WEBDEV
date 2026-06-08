@@ -7,7 +7,7 @@ import type {
   Item,
 } from "./types";
 
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = (import.meta.env.VITE_API_URL as string | undefined) ?? "http://localhost:3000/api";
 
 async function getJson<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`);

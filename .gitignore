@@ -5,8 +5,23 @@
 # Logs
 *.log
 
-# Dependências (caso algum tooling rode na raiz)
+# Dependências
 node_modules
 
-orbitstock.db-shm
-orbitstock.db-wal
+# Banco de dados SQLite
+*.db
+*.db-shm
+*.db-wal
+backend/data/
+
+# Build
+backend/dist/
+frontend/dist/
+
+# Variáveis de ambiente
+.env
+.env.local
+.env*.local
+
+# Claude Code
+.claude/

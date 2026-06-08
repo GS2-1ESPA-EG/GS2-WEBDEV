@@ -6,7 +6,7 @@ const envSchema = z.object({
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .default("development"),
-  DB_PATH: z.string().default("./data/orbitstock.db"),
+  DB_PATH: z.string().default("./orbitstock.db"),
   ANTHROPIC_API_KEY: z.string().min(1, "ANTHROPIC_API_KEY é obrigatória"),
   ORION_URL: z.string().url().default("http://localhost:1026"),
 });

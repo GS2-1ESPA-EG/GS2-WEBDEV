@@ -1,40 +1,48 @@
-// Barra lateral de navegação do Mission Control
-const NAV_ITEMS = [
-  "Dashboard",
-  "Frota Dragon",
-  "Inventário",
-  "Telemetria",
-  "Previsão IA",
-  "Alertas",
-  "Relatórios",
-  "Configurações",
-];
+import { NavLink } from 'react-router-dom'
 
-interface Props {
-  active: string;
-  onNavigate: (item: string) => void;
-}
+const CONTENT_ITEMS = [
+  { label: 'Problema', to: '/problema' },
+  { label: 'Tecnologia', to: '/tecnologia' },
+  { label: 'Objetivos', to: '/objetivos' },
+  { label: 'Benefícios', to: '/beneficios' },
+  { label: 'Aplicação', to: '/aplicacao' },
+]
 
-const Sidebar = ({ active, onNavigate }: Props) => {
-  return (
-    <aside className="os-sidebar">
-      <div className="os-brand">
-        <span className="os-brand-title">OrbitStock</span>
-        <span className="os-brand-sub">Mission Control</span>
-      </div>
-      <nav className="os-nav">
-        {NAV_ITEMS.map((item) => (
-          <a
-            key={item}
-            className={`os-nav-item${item === active ? " active" : ""}`}
-            onClick={() => onNavigate(item)}
-          >
-            {item}
-          </a>
-        ))}
-      </nav>
-    </aside>
-  );
-};
+const SYSTEM_ITEMS = [
+  { label: 'Dashboard', to: '/dashboard' },
+  { label: 'Previsão IA', to: '/predicao' },
+  { label: 'Inventário', to: '/inventario' },
+]
 
-export default Sidebar;
+const Sidebar = () => (
+  <aside className="os-sidebar">
+    <div className="os-brand">
+      <span className="os-brand-title">OrbitStock</span>
+      <span className="os-brand-sub">Mission Control</span>
+    </div>
+    <nav className="os-nav" aria-label="Navegação principal">
+      <span className="os-nav-group">Conteúdo</span>
+      {CONTENT_ITEMS.map(({ label, to }) => (
+        <NavLink
+          key={to}
+          to={to}
+          className={({ isActive }) => `os-nav-item${isActive ? ' active' : ''}`}
+        >
+          {label}
+        </NavLink>
+      ))}
+      <span className="os-nav-group">Sistema</span>
+      {SYSTEM_ITEMS.map(({ label, to }) => (
+        <NavLink
+          key={to}
+          to={to}
+          className={({ isActive }) => `os-nav-item${isActive ? ' active' : ''}`}
+        >
+          {label}
+        </NavLink>
+      ))}
+    </nav>
+  </aside>
+)
+
+export default Sidebar

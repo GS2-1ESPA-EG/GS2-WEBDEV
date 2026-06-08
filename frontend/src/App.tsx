@@ -1,24 +1,33 @@
-import { useState } from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './components/dashboard.css'
+import Layout from './components/Layout'
 import Dashboard from './components/Dashboard'
 import PredictionView from './components/PredictionView'
 import AstronautApp from './components/AstronautApp'
-
-type View = 'dashboard' | 'prediction' | 'astronaut'
+import Problema from './pages/Problema'
+import Tecnologia from './pages/Tecnologia'
+import Objetivos from './pages/Objetivos'
+import Beneficios from './pages/Beneficios'
+import Aplicacao from './pages/Aplicacao'
 
 function App() {
-  const [view, setView] = useState<View>('dashboard')
-
-  function onNavigate(item: string) {
-    if (item === 'Dashboard') setView('dashboard')
-    else if (item === 'Previsão IA') setView('prediction')
-    else if (item === 'Inventário') setView('astronaut')
-    // demais itens ainda não implementados
-  }
-
-  if (view === 'prediction') return <PredictionView onNavigate={onNavigate} />
-  if (view === 'astronaut') return <AstronautApp onNavigate={onNavigate} />
-  return <Dashboard onNavigate={onNavigate} />
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Navigate to="/problema" replace />} />
+          <Route path="problema" element={<Problema />} />
+          <Route path="tecnologia" element={<Tecnologia />} />
+          <Route path="objetivos" element={<Objetivos />} />
+          <Route path="beneficios" element={<Beneficios />} />
+          <Route path="aplicacao" element={<Aplicacao />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="predicao" element={<PredictionView />} />
+        </Route>
+        <Route path="/inventario" element={<AstronautApp />} />
+      </Routes>
+    </BrowserRouter>
+  )
 }
 
 export default App

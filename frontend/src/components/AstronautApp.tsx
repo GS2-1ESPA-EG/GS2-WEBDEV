@@ -1,12 +1,9 @@
 // Tela 01 — App do astronauta (a bordo da Dragon). Página dark que simula o tablet de bordo.
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { SpacecraftDetail, Item, Alert } from "../api/types";
 import { fetchFleet, fetchSpacecraft, consumeItem } from "../api/client";
 import "./astronaut.css";
-
-interface Props {
-  onNavigate: (item: string) => void;
-}
 
 const STATUS_COLOR: Record<string, string> = {
   nominal: "#22c55e",
@@ -38,7 +35,8 @@ function formatElapsed(now: number): string {
   return `T+${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
 }
 
-const AstronautApp = ({ onNavigate }: Props) => {
+const AstronautApp = () => {
+  const navigate = useNavigate();
   const [detail, setDetail] = useState<SpacecraftDetail | null>(null);
   const [spacecraftId, setSpacecraftId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -114,7 +112,7 @@ const AstronautApp = ({ onNavigate }: Props) => {
       <div className="ast-device">
         {/* Topo: identificação da missão */}
         <header className="ast-topbar">
-          <button className="ast-back" onClick={() => onNavigate("Dashboard")}>
+          <button className="ast-back" onClick={() => navigate("/dashboard")}>
             ← Mission Control
           </button>
           <div className="ast-mission">

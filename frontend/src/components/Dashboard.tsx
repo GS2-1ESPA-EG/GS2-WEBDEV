@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import type { FleetSummary, SpacecraftDetail, TelemetryEvent } from "../api/types";
 import { fetchFleet, fetchSpacecraft, fetchEvents } from "../api/client";
 import { timeAgo } from "./statusMeta";
-import Sidebar from "./Sidebar";
 import KpiCards from "./KpiCards";
 import FleetCard from "./FleetCard";
 import TelemetryChart from "./TelemetryChart";
@@ -12,11 +11,7 @@ import CompartmentsCharts from "./CompartmentsCharts";
 const REFRESH_MS = 5000;
 const WINDOW_HOURS = 6;
 
-interface Props {
-  onNavigate: (item: string) => void;
-}
-
-const Dashboard = ({ onNavigate }: Props) => {
+const Dashboard = () => {
   const [fleet, setFleet] = useState<FleetSummary[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detail, setDetail] = useState<SpacecraftDetail | null>(null);
@@ -86,10 +81,8 @@ const Dashboard = ({ onNavigate }: Props) => {
   const selected = fleet.find((s) => s.spacecraft_id === selectedId) ?? null;
 
   return (
-    <div className="os-app">
-      <Sidebar active="Dashboard" onNavigate={onNavigate} />
-      <main className="os-main">
-        {error && (
+    <>
+      {error && (
           <div className="os-error">
             Sem conexão com o backend ({error}). Verifique se o servidor está em
             http://localhost:3000.
@@ -132,8 +125,7 @@ const Dashboard = ({ onNavigate }: Props) => {
           Compartimentos · {selected?.name ?? "—"}
         </h2>
         <CompartmentsCharts detail={detail} />
-      </main>
-    </div>
+    </>
   );
 };
 

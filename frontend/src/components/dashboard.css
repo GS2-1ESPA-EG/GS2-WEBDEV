@@ -1,6 +1,5 @@
 /* Dashboard Mission Control — layout full-width, tema claro com sidebar escura */
 
-/* Solta o #root do template Vite (que era centralizado e limitado) */
 #root {
   width: 100%;
   max-width: 100%;
@@ -14,8 +13,18 @@
   min-height: 100svh;
   background: #f1f3f6;
   color: #1f2937;
-  font: 15px/1.4 system-ui, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Inter', system-ui, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
   letter-spacing: normal;
+}
+
+/* Layout right panel (main + footer) */
+.os-layout-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 /* ---------- Sidebar ---------- */
@@ -47,15 +56,27 @@
 .os-nav {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+}
+.os-nav-group {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #4a5568;
+  padding: 12px 14px 4px;
+  display: block;
 }
 .os-nav-item {
+  display: block;
   padding: 10px 14px;
   border-radius: 8px;
   font-size: 14px;
   color: #aab4c5;
   cursor: pointer;
   user-select: none;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
 }
 .os-nav-item:hover {
   background: rgba(255, 255, 255, 0.06);
@@ -72,6 +93,57 @@
   flex: 1;
   padding: 28px 36px 48px;
   min-width: 0;
+}
+
+/* ---------- Footer ---------- */
+.os-footer {
+  background: #0f1a2e;
+  color: #6b7a92;
+  padding: 24px 36px;
+  font-size: 13px;
+}
+.os-footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.os-footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.os-footer-brand strong {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+.os-footer-brand span {
+  font-size: 12px;
+  color: #6b7a92;
+}
+.os-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+.os-footer-links a {
+  color: #aab4c5;
+  text-decoration: none;
+  transition: color 0.15s;
+  font-size: 13px;
+}
+.os-footer-links a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+.os-footer-copy {
+  font-size: 12px;
+  color: #4a5568;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 14px;
 }
 .os-error {
   background: #fef2f2;
@@ -386,4 +458,108 @@
   font-size: 12px;
   color: #9ca3af;
   margin-top: 8px;
+}
+
+/* ===== RESPONSIVIDADE COMPLETA ===== */
+
+/* Tablet (≤1024px) */
+@media (max-width: 1024px) {
+  .os-sidebar {
+    width: 190px;
+    padding: 20px 12px;
+  }
+  .os-main {
+    padding: 20px 24px 40px;
+  }
+  .os-footer {
+    padding: 20px 24px;
+  }
+}
+
+/* Tablet pequeno (≤900px) */
+@media (max-width: 900px) {
+  .os-kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .os-comp-charts {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile landscape / tablet (≤768px) */
+@media (max-width: 768px) {
+  .os-app {
+    flex-direction: column;
+  }
+  .os-sidebar {
+    width: 100%;
+    padding: 16px;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .os-brand {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+  }
+  .os-brand-sub { display: none; }
+  .os-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .os-nav-group { display: none; }
+  .os-nav-item {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+  .os-main {
+    padding: 16px 16px 32px;
+  }
+  .os-footer {
+    padding: 16px;
+  }
+  .os-footer-inner {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .os-fleet {
+    grid-template-columns: 1fr;
+  }
+  .os-pred-head {
+    flex-direction: column;
+  }
+}
+
+/* Mobile portrait (≤480px) */
+@media (max-width: 480px) {
+  .os-kpis {
+    grid-template-columns: 1fr 1fr;
+  }
+  .os-header h1 {
+    font-size: 20px;
+  }
+  .os-kpi-value {
+    font-size: 28px;
+  }
+  .os-footer-links {
+    gap: 4px 12px;
+  }
+  .os-pred-items {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile muito pequeno (≤360px) */
+@media (max-width: 360px) {
+  .os-kpis {
+    grid-template-columns: 1fr;
+  }
+  .os-nav-item {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
 }

@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import type { FleetSummary, PredictionReport, RiskLevel } from "../api/types";
 import { fetchFleet, generatePrediction } from "../api/client";
-import Sidebar from "./Sidebar";
 import PredictionChart from "./PredictionChart";
 
 const RISK_META: Record<RiskLevel, { label: string; color: string }> = {
@@ -11,11 +10,7 @@ const RISK_META: Record<RiskLevel, { label: string; color: string }> = {
   high: { label: "RISCO ALTO IDENTIFICADO", color: "#dc2626" },
 };
 
-interface Props {
-  onNavigate: (item: string) => void;
-}
-
-const PredictionView = ({ onNavigate }: Props) => {
+const PredictionView = () => {
   const [fleet, setFleet] = useState<FleetSummary[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [report, setReport] = useState<PredictionReport | null>(null);
@@ -48,10 +43,8 @@ const PredictionView = ({ onNavigate }: Props) => {
   const risk = report ? RISK_META[report.risk_level] : null;
 
   return (
-    <div className="os-app">
-      <Sidebar active="Previsão IA" onNavigate={onNavigate} />
-      <main className="os-main">
-        <div className="os-pred-head">
+    <>
+      <div className="os-pred-head">
           <div>
             <h1>Análise preditiva{selected ? ` — ${selected.name}` : ""}</h1>
             <p className="os-subtitle">
@@ -166,8 +159,7 @@ const PredictionView = ({ onNavigate }: Props) => {
             </button>
           </>
         )}
-      </main>
-    </div>
+    </>
   );
 };
 
