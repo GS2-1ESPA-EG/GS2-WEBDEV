@@ -109,17 +109,20 @@
 }
 .ast-filters {
   display: flex;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 .ast-chip {
   background: #111a2d;
   border: 1px solid #243352;
   border-radius: 999px;
-  padding: 12px 22px;
+  padding: 8px 16px;
   color: #9db4d8;
   font: inherit;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+  white-space: nowrap;
 }
 .ast-chip:hover {
   border-color: #34507e;
