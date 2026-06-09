@@ -68,7 +68,7 @@ PORT=3000
 NODE_ENV=development
 DB_PATH=./orbitstock.db
 ANTHROPIC_API_KEY=sk-ant-...
-ORION_URL=http://158.23.61.7:1026/
+ORION_URL=http://<ip-da-vm>:1026/
 ```
 
 ---
