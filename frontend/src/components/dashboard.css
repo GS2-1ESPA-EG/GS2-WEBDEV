@@ -41,7 +41,6 @@
 
 /* Botão de tema */
 .os-theme-toggle {
-  margin-top: auto;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -79,6 +78,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  flex: 1;
 }
 .os-nav-group {
   font-size: 10px;
