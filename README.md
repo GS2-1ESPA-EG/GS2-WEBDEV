@@ -4,6 +4,17 @@ Sistema de monitoramento e controle de inventário para a cápsula **Dragon C209
 
 ---
 
+## Deploy
+
+| Serviço | URL |
+|---|---|
+| **Frontend (Vercel)** | https://gs-2-webdev.vercel.app |
+| **Backend (Render)** | https://gs2-webdev.onrender.com |
+
+> O backend free tier dorme após 15 min de inatividade — a primeira requisição pode demorar ~30s para acordar.
+
+---
+
 ## Equipe
 
 | Nome | RM |
@@ -13,7 +24,7 @@ Sistema de monitoramento e controle de inventário para a cápsula **Dragon C209
 
 ---
 
-## Instalação e execução
+## Instalação e execução local
 
 ### Pré-requisitos
 
@@ -22,14 +33,13 @@ Sistema de monitoramento e controle de inventário para a cápsula **Dragon C209
 | Node.js | **22 ou superior** | O banco de dados usa `node:sqlite`, módulo nativo do Node 22 |
 | npm | 10+ | Incluído no Node 22 |
 | Chave Anthropic | — | Necessária para o módulo de previsão IA |
-| FIWARE Orion | — | VM ou instância com a entidade `urn:ngsi-ld:Compartment:DRAGON-C209:M-03` |
 
 ---
 
 ### 1. Clonar o repositório
 
 ```bash
-git clone <url-do-repositorio>
+git clone https://github.com/GS2-1ESPA-EG/GS2-WEBDEV.git
 cd GS2-WEBDEV
 ```
 
@@ -51,27 +61,19 @@ npm install
 
 ### 3. Configurar variáveis de ambiente
 
-Crie o arquivo `backend/.env` com base no exemplo:
-
-```bash
-cp backend/.env.example backend/.env
-```
-
-Abra `backend/.env` e preencha os valores:
+Crie o arquivo `backend/.env`:
 
 ```env
 PORT=3000
 NODE_ENV=development
-DB_PATH=./data/orbitstock.db
-ANTHROPIC_API_KEY=sk-ant-...        # sua chave real da Anthropic
-ORION_URL=http://<ip-da-vm>:1026/   # endereço do FIWARE Orion
+DB_PATH=./orbitstock.db
+ANTHROPIC_API_KEY=sk-ant-...
+ORION_URL=http://<ip-da-vm>:1026/
 ```
 
 ---
 
-### 4. Popular o banco de dados (seed)
-
-O seed cria a nave **DRAGON-C209**, seus 12 compartimentos e 39 tipos de itens de carga:
+### 4. Popular o banco de dados
 
 ```bash
 cd backend
@@ -97,37 +99,16 @@ cd backend
 npm run dev
 ```
 
-Saída esperada:
-
-```
-OrbitStock backend rodando em http://localhost:3000
-[Orion Poller] Iniciando polling a cada 3000ms em http://<orion-url>
-[Orion Poller] urn:ngsi-ld:Compartment:DRAGON-C209:M-03 atualizado em ...
-```
-
 ---
 
 ### 6. Subir o frontend
-
-Em um novo terminal:
 
 ```bash
 cd frontend
 npm run dev
 ```
 
-Saída esperada:
-
-```
-VITE v8.x  ready in Xms
-➜  Local:   http://localhost:5173/
-```
-
----
-
-### 7. Acessar a aplicação
-
-Abra o navegador em **http://localhost:5173**
+Acesse **http://localhost:5173**
 
 ---
 
@@ -144,17 +125,11 @@ Abra o navegador em **http://localhost:5173**
                                                  ┌──────────▼───────────┐
                                                  │  Frontend React      │
                                                  │  Vite + TypeScript   │
+                                                 │  React Router DOM    │
                                                  │  Recharts            │
                                                  │  :5173               │
                                                  └──────────────────────┘
 ```
-
-### Fluxo de dados
-
-1. O ESP32 no Wokwi publica leituras de sensores no FIWARE Orion (temperatura, umidade, impacto, porta)
-2. O backend faz polling no Orion a cada 3 segundos e persiste os eventos no SQLite
-3. A cada novo evento, o estado do compartimento é recalculado e alertas são gerados automaticamente
-4. O frontend consome a API REST e atualiza o dashboard a cada 5 segundos
 
 ---
 
@@ -166,24 +141,32 @@ GS2-WEBDEV/
 │   ├── src/
 │   │   ├── config/          # env.ts, anthropic.ts
 │   │   ├── controllers/     # fleet, inventory, item, prediction, telemetry
-│   │   ├── middleware/       # logger, errorHandler
-│   │   ├── repositories/    # db.ts + acesso SQLite (spacecraft, compartments, items, events, state)
+│   │   ├── middleware/      # logger, errorHandler
+│   │   ├── repositories/    # db.ts + acesso SQLite
 │   │   ├── routes/          # fleet, inventory, item, prediction, telemetry
 │   │   ├── services/        # alert, fleet, inventory, item, orion-poller, prediction, telemetry
-│   │   ├── types/           # fleet.types, inventory.types, prediction.types, telemetry.types
-│   │   ├── seed.ts          # popular banco com Dragon C209
-│   │   └── server.ts        # ponto de entrada
-│   ├── data/                # orbitstock.db (criado na primeira execução)
+│   │   ├── types/           # fleet, inventory, prediction, telemetry
+│   │   ├── seed.ts
+│   │   └── server.ts
 │   └── .env                 # variáveis de ambiente (não versionado)
 │
 └── frontend/
     └── src/
-        ├── api/             # client.ts (HTTP), types.ts
+        ├── api/             # client.ts, types.ts
+        ├── pages/           # páginas de conteúdo
+        │   ├── Problema.tsx
+        │   ├── Tecnologia.tsx
+        │   ├── Objetivos.tsx
+        │   ├── Beneficios.tsx
+        │   ├── Aplicacao.tsx
+        │   └── pages.css
         └── components/
-            ├── Dashboard.tsx        # tela principal de controle de missão
+            ├── Layout.tsx           # sidebar + outlet + footer
+            ├── Sidebar.tsx          # navegação com React Router NavLink
+            ├── Footer.tsx           # rodapé padrão
+            ├── Dashboard.tsx        # controle de missão
             ├── PredictionView.tsx   # análise preditiva com IA
-            ├── AstronautApp.tsx     # inventário de bordo (visão do astronauta)
-            ├── Sidebar.tsx
+            ├── AstronautApp.tsx     # inventário de bordo
             ├── KpiCards.tsx
             ├── FleetCard.tsx
             ├── TelemetryChart.tsx
@@ -193,47 +176,52 @@ GS2-WEBDEV/
 
 ---
 
+## Páginas
+
+### Conteúdo (estáticas)
+
+| Rota | Página |
+|---|---|
+| `/problema` | O problema de gerenciar suprimentos em missões espaciais |
+| `/tecnologia` | Stack técnica e arquitetura do sistema |
+| `/objetivos` | Objetivos do OrbitStock |
+| `/beneficios` | Benefícios para tripulação e operações |
+| `/aplicacao` | Aplicação no dia a dia da missão |
+
+### Sistema (integradas com API)
+
+| Rota | Página |
+|---|---|
+| `/dashboard` | Controle de missão — KPIs, frota, telemetria |
+| `/predicao` | Análise preditiva com IA (Claude) |
+| `/inventario` | Inventário de bordo — visão do astronauta |
+
+---
+
 ## Funcionalidades
 
 ### Dashboard — Controle de Missão
 
-- Visão geral da frota com KPIs em tempo real (naves ativas, alertas críticos, compartimentos monitorados)
-- Cards individuais por nave com status de saúde agregado
-- Gráfico de telemetria das últimas 6 horas (temperatura e umidade do compartimento M-03)
-- Gráficos por compartimento com status individual
+- KPIs em tempo real (naves ativas, alertas críticos, saúde da frota)
+- Cards por nave com status agregado
+- Gráfico de telemetria das últimas 6 horas
+- Gráficos por compartimento
 - Atualização automática a cada 5 segundos
 
 ### Previsão IA
 
-- Regressão linear sobre o histórico de telemetria para projetar tendências de temperatura
-- Análise de consumo de itens e projeção de depleção de estoque
-- Relatório em linguagem natural gerado pelo **Claude** (Anthropic) com:
-  - Nível de risco (baixo / médio / alto)
-  - Resumo executivo
-  - Recomendações priorizadas
-  - Nota de confiança baseada no R² das regressões
-- Gráfico de projeção com dados históricos e forecast
+- Regressão linear sobre histórico de telemetria
+- Relatório em linguagem natural gerado pelo **Claude** (Anthropic)
+- Nível de risco, resumo executivo, recomendações e nota de confiança
+- Gráfico de projeção com histórico + forecast
 
-### Inventário de Bordo (visão do astronauta)
+### Inventário de Bordo
 
-- Interface dark simulando tablet de bordo da Dragon
+- Interface dark simulando tablet de bordo
 - Cronômetro T+ de missão em tempo real
-- Listagem completa dos 39 tipos de itens distribuídos nos 12 compartimentos
-- Busca por nome, código ou compartimento
-- Filtro por categoria (médico, alimentação, água, ciência, equipamentos, etc.)
-- Baixa de consumo de itens com atualização imediata do estoque
-- Painel de alertas ativos com opção de resolução
-
-### Sistema de Alertas
-
-Alertas gerados automaticamente a cada leitura do sensor:
-
-| Tipo | Warning | Critical |
-|------|---------|----------|
-| Temperatura | Próxima dos limites (±10%) | Fora da faixa nominal |
-| Umidade | ≥ 90% do máximo | Acima do máximo |
-| Porta | Compartimento aberto | — |
-| Impacto | ≥ 3G | ≥ 5G |
+- Busca e filtro por categoria
+- Baixa de consumo com atualização imediata
+- Painel de alertas com opção de resolução
 
 ---
 
@@ -243,58 +231,26 @@ Base URL: `http://localhost:3000/api`
 
 | Método | Rota | Descrição |
 |--------|------|-----------|
-| GET | `/fleet` | Lista todas as naves com KPIs agregados |
-| GET | `/fleet/:spacecraftId` | Detalhe da nave com compartimentos e itens |
-| GET | `/telemetry/events/:spacecraftId` | Eventos de telemetria (query param `?since=ISO`) |
-| POST | `/predictions/generate` | Gera relatório preditivo com IA |
-| GET | `/inventory/:spacecraftId` | Estado atual de todos os compartimentos |
-| GET | `/items/:spacecraftId` | Lista de itens da nave |
-| POST | `/items/:itemId/consume` | Registra consumo de um item (`{ amount }`) |
+| GET | `/fleet` | Lista naves com KPIs |
+| GET | `/fleet/:spacecraftId` | Detalhe da nave |
+| GET | `/telemetry/events/:spacecraftId` | Eventos de telemetria |
+| POST | `/predictions/generate` | Gera relatório preditivo |
+| GET | `/inventory/:spacecraftId` | Estado dos compartimentos |
+| GET | `/items/:spacecraftId` | Itens da nave |
+| POST | `/items/:itemId/consume` | Registra consumo |
 
 ---
 
-## Integração FIWARE Orion / Wokwi
-
-O backend faz polling a cada 3 segundos na entidade:
-
-```
-urn:ngsi-ld:Compartment:DRAGON-C209:M-03
-```
-
-Atributos esperados na entidade NGSIv2:
-
-```json
-{
-  "id": "urn:ngsi-ld:Compartment:DRAGON-C209:M-03",
-  "type": "Compartment",
-  "TimeInstant":       { "type": "DateTime", "value": "2026-05-29T..." },
-  "spacecraft_id":     { "type": "Text",     "value": "DRAGON-C209" },
-  "compartment_id":    { "type": "Text",     "value": "M-03" },
-  "current_temp":      { "type": "Number",   "value": 4.0 },
-  "current_humidity":  { "type": "Number",   "value": 47.5 },
-  "temp_min":          { "type": "Number",   "value": 2 },
-  "temp_max":          { "type": "Number",   "value": 8 },
-  "humidity_max":      { "type": "Number",   "value": 80 },
-  "is_open":           { "type": "Boolean",  "value": false },
-  "last_impact_g":     { "type": "Number",   "value": 1.0 },
-  "last_light_level":  { "type": "Number",   "value": 1001 },
-  "severity":          { "type": "Text",     "value": "nominal" }
-}
-```
-
-O header `fiware-service: smart` é enviado em todas as requisições ao Orion.
-
----
-
-## Scripts disponíveis
+## Scripts
 
 ### Backend
 
 ```bash
-npm run dev    # servidor em modo watch (tsx)
-npm run build  # compila TypeScript para dist/
-npm run start  # roda o build compilado
-npm run seed   # popula o banco de dados
+npm run dev        # servidor em modo watch
+npm run build      # compila TypeScript para dist/
+npm run start      # roda o build compilado
+npm run start:prod # seed + start (usado no Render)
+npm run seed       # popula o banco de dados
 ```
 
 ### Frontend
@@ -312,10 +268,12 @@ npm run lint    # ESLint
 
 | Camada | Tecnologia |
 |--------|-----------|
-| Frontend | React 19, TypeScript, Vite, Recharts |
-| Backend | Node.js 22, Express 5, TypeScript, tsx |
-| Banco de dados | SQLite via `node:sqlite` (nativo, sem dependência externa) |
+| Frontend | React 19, TypeScript, Vite, React Router DOM, Recharts |
+| Estilo | CSS3, Flexbox, Google Fonts (Inter + Space Grotesk), CSS Variables |
+| Backend | Node.js 22, Express 5, TypeScript |
+| Banco de dados | SQLite via `node:sqlite` |
 | IA | Anthropic Claude (`@anthropic-ai/sdk`) |
 | IoT | FIWARE Orion Context Broker, NGSIv2 |
+| Deploy | Vercel (frontend) + Render (backend) |
 | Validação | Zod |
 | Simulação | Wokwi (ESP32) |
